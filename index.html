@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My MP3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            padding-top: 60px; /* Space for fixed navbar */
+        }
+        .progress-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .progress {
+            background: #3b82f6;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+        .album-cover {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
+            z-index: 10;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .page-content {
+            display: none;
+        }
+        .page-content.active {
+            display: block;
+        }
+        .about-content p {
+            text-align: center;
+        }
+        .page {
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="flex justify-center">
+        <button id="about-btn" class="text-white hover:text-gray-200 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition">About</button>
+        <button id="home-btn" class="text-white hover:text-gray-200 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hidden">Home</button>
+    </nav>
+
+    <!-- Player Content -->
+    <div id="player-page" class="page-content active bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">My MP3</h1>
+        
+        <!-- Track Info -->
+        <div class="mb-6 text-center">
+            <p id="track-name" class="text-lg font-semibold text-gray-700">Select a track</p>
+            <p id="track-time" class="text-sm text-gray-500">0:00 / 0:00</p>
+        </div>
+        
+        <!-- Album Cover -->
+        <div class="mb-6 flex justify-center">
+            <img id="album-cover" src="https://placehold.co/200x200" alt="Album cover" class="album-cover">
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="mb-6">
+            <div id="progress-bar" class="progress-bar">
+                <div id="progress" class="progress" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="flex justify-center gap-4 mb-6">
+            <button id="prev-track-btn" class="p-3 bg-gray-200 rounded-full hover:bg-gray-300" title="Previous Track">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5L4 12m0 0l7 7m-7-7h16"/>
+                </svg>
+            </button>
+            <button id="rewind-btn" class="p-3 bg-gray-200 rounded-full hover:bg-gray-300" title="Rewind 10s">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l-7 7m0 0l7 7m-7-7h18"/>
+                </svg>
+            </button>
+            <button id="play-pause-btn" class="p-4 bg-blue-500 rounded-full hover:bg-blue-600" title="Play/Pause">
+                <svg id="play-icon" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.2A1 1 0 0010 9.768v4.464a1 1 0 001.555.832l3.197-2.2a1 1 0 000-1.664z"/>
+                </svg>
+                <svg id="pause-icon" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/>
+                </svg>
+            </button>
+            <button id="forward-btn" class="p-3 bg-gray-200 rounded-full hover:bg-gray-300" title="Forward 10s">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </button>
+            <button id="next-track-btn" class="p-3 bg-gray-200 rounded-full hover:bg-gray-300" title="Next Track">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7m0 0l-7 7m7-7H8"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Playlist -->
+        <div class="max-h-48 overflow-y-auto">
+            <ul id="playlist" class="space-y-2">
+                <!-- Playlist items will be populated by JavaScript -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- About Content -->
+    <div id="about-page" class="page-content bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">About My MP3</h1>
+        <div class="about-content">
+            <p class="text-gray-700 mb-4">
+                My MP3 is a custom-built music player designed to showcase my web development and creative skills. 
+                It features a sleek interface with album art, playlist navigation, and intuitive controls 
+                for enhanced user experience. 
+            </p>
+            <p class="text-gray-700 mb-4">
+                This project was created as part of my portfolio to demonstrate proficiency in HTML, 
+                CSS, JavaScript, and creativity. Explore the player to enjoy a curated selection of tracks produced by me.
+            </p>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        const audio = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const rewindBtn = document.getElementById('rewind-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const prevTrackBtn = document.getElementById('prev-track-btn');
+        const nextTrackBtn = document.getElementById('next-track-btn');
+        const trackName = document.getElementById('track-name');
+        const trackTime = document.getElementById('track-time');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+        const playlistEl = document.getElementById('playlist');
+        const albumCoverImg = document.getElementById('album-cover');
+        const aboutBtn = document.getElementById('about-btn');
+        const homeBtn = document.getElementById('home-btn');
+        const playerPage = document.getElementById('player-page');
+        const aboutPage = document.getElementById('about-page');
+
+        // Playlist - Add your MP3 files and album covers here
+        const playlist = [
+            { title: 'Bendin', src: 'music/Bendin.mp3', albumCover: 'images/Bendin.jpg' },
+            { title: 'Cerebral', src: 'music/Cerebral.mp3', albumCover: 'images/MistyMorning.jpg' },
+            { title: 'ChaseIt', src: 'music/Chase.mp3', albumCover: 'images/ChaseIt.png' },
+            { title: 'DownToEarth', src: 'music/DownToEarth.mp3', albumCover: 'images/DownToEarth.png' },
+            { title: 'Follow', src: 'music/Follow.mp3', albumCover: 'images/Follow.png' },
+            { title: 'Gazing', src: 'music/Gazing.mp3', albumCover: 'images/Gazing.png' },
+            { title: 'Haze', src: 'music/Haze_2.mp3', albumCover: 'images/MistyMorning.jpg' },
+            { title: 'HiMolly', src: 'music/HiMolly.mp3', albumCover: 'images/HiMolly.jpg' },
+            { title: 'Lucy', src: 'music/Lucy.mp3', albumCover: 'images/Lucy.jpg' },
+            { title: 'Melting', src: 'music/Melting.mp3', albumCover: 'images/Melting.jpg' },
+            { title: 'NewDay', src: 'music/NewDay.mp3', albumCover: 'images/NewDay.png' },
+            { title: 'NoRelation', src: 'music/NoRelation.mp3', albumCover: 'images/NoRelation.webp' },
+            { title: 'Paper', src: 'music/Paper.mp3', albumCover: 'images/Paper.jpg' },
+            { title: 'Skywalker', src: 'music/Skywalker.mp3', albumCover: 'images/MistyMorning.jpg' },
+            { title: 'PurpleDreams', src: 'music/StraightPurp.mp3', albumCover: 'images/StraightPurp.png' },
+            { title: 'Space', src: 'music/SuperSpacey.mp3', albumCover: 'images/SuperSpacey.png' },
+            { title: 'TheWall', src: 'music/TheWall.mp3', albumCover: 'images/MistyMorning.jpg' },
+            { title: 'TripAgain', src: 'music/TripAgain.mp3', albumCover: 'images/TripAgain.png' },
+        ];
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+
+        // Navigation
+        aboutBtn.addEventListener('click', () => {
+            playerPage.classList.remove('active');
+            aboutPage.classList.add('active');
+            aboutBtn.classList.add('hidden');
+            homeBtn.classList.remove('hidden');
+        });
+
+        homeBtn.addEventListener('click', () => {
+            aboutPage.classList.remove('active');
+            playerPage.classList.add('active');
+            homeBtn.classList.add('hidden');
+            aboutBtn.classList.remove('hidden');
+        });
+
+        // Format time in mm:ss
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Load track
+        function loadTrack(index) {
+            const track = playlist[index];
+            audio.src = track.src;
+            trackName.textContent = track.title;
+            albumCoverImg.src = track.albumCover;
+            albumCoverImg.alt = `${track.title} album cover`;
+            audio.load();
+            updatePlaylistUI();
+        }
+
+        // Update playlist UI
+        function updatePlaylistUI() {
+            playlistEl.innerHTML = '';
+            playlist.forEach((track, index) => {
+                const li = document.createElement('li');
+                li.className = `p-2 rounded cursor-pointer ${index === currentTrackIndex ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`;
+                li.textContent = track.title;
+                li.addEventListener('click', () => {
+                    currentTrackIndex = index;
+                    loadTrack(currentTrackIndex);
+                    playTrack();
+                });
+                playlistEl.appendChild(li);
+            });
+        }
+
+        // Play track
+        function playTrack() {
+            audio.play();
+            isPlaying = true;
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+        }
+
+        // Pause track
+        function pauseTrack() {
+            audio.pause();
+            isPlaying = false;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+        }
+
+        // Toggle play/pause
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseTrack();
+            } else {
+                playTrack();
+            }
+        });
+
+        // Skip to next track
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            loadTrack(currentTrackIndex);
+            if (isPlaying) playTrack();
+        }
+
+        // Go to previous track
+        function prevTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            loadTrack(currentTrackIndex);
+            if (isPlaying) playTrack();
+        }
+
+        // Previous track button
+        prevTrackBtn.addEventListener('click', prevTrack);
+
+        // Rewind 10 seconds
+        rewindBtn.addEventListener('click', () => {
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
+        });
+
+        // Forward 10 seconds
+        forwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+        });
+
+        // Next track button
+        nextTrackBtn.addEventListener('click', nextTrack);
+
+        // Update progress bar and time
+        audio.addEventListener('timeupdate', () => {
+            const current = audio.currentTime;
+            const duration = audio.duration || 0;
+            const progressPercent = (current / duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            trackTime.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        });
+
+        // Seek on progress bar click
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const seekTime = (clickX / width) * audio.duration;
+            audio.currentTime = seekTime;
+        });
+
+        // Auto-play next track when current track ends
+        audio.addEventListener('ended', nextTrack);
+
+        // Initialize playlist
+        updatePlaylistUI();
+        loadTrack(currentTrackIndex);
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About My MP3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            padding-top: 60px; /* Space for fixed navbar */
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
+            z-index: 10;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="flex justify-center">
+        <a href="index.html" class="text-white hover:text-gray-200 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition">Home</a>
+    </nav>
+
+    <div class="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition duration-300 hover:scale-105 hover:shadow-3xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">About My MP3</h1>
+        <p class="text-gray-700 mb-4">
+            My MP3 is a custom-built music player designed to showcase my web development and creative skills. 
+            It features a sleek interface with album art, playlist navigation, and intuitive controls 
+            for enhanced user experience.
+        </p>
+        <p class="text-gray-700 mb-4">
+            This project was created as part of my portfolio to demonstrate proficiency in HTML, 
+            CSS, JavaScript, and creativity. Explore the player to enjoy a curated selection of instrumental tracks produced by me.
+        </p>
+    </div>
+</body>
+</html>
